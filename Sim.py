@@ -14,7 +14,7 @@ if __name__ == '__main__':
     # Input file path
     filepath = sys.argv[1]
     # Number of perceptrons
-    N = sys.argv[2]
+    N = int(sys.argv[2])
 
     p = Predictor(N)
     hits = 0
