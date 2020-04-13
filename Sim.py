@@ -38,4 +38,3 @@ if __name__ == '__main__':
     print("accuracy:", hits / total)
     print("predicted taken:", p_taken)
     print("predicted not taken:", p_not_taken)
-    print(p.perceptrons)
