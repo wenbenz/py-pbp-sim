@@ -44,8 +44,8 @@ class Perceptron:
         Update perceptron
         :param x: true taken/not-taken value
         """
-        self.update(x)
         y = self.predict()
+        self.update(x)
         if y != x or abs(y) <= self.threshold:
             for i, w in enumerate(self.weights):
                 self.weights[i] = w + (x * self.history[i])
