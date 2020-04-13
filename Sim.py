@@ -10,6 +10,7 @@ The input file should be as follows:
     - taken and not taken should be represented as 1 and 0 respectively
     - example test.txt
 """
+
 if __name__ == '__main__':
     # Input file path
     filepath = sys.argv[1]
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     for l in lines:
         total += 1
         addr, x = l.split(",")
-        addr, x = int(addr) % 10, int(x) * 2 - 1    # translates 0s and 1s to -1s and 1s
+        addr, x = int(addr) % N, int(x) * 2 - 1    # translates 0s and 1s to -1s and 1s
         y = p.predict(addr)
         if y == 1:
             p_taken += 1
@@ -35,6 +36,7 @@ if __name__ == '__main__':
         if x == y:
             hits += 1
         p.train(addr, x)
+
     print("accuracy:", hits / total)
     print("predicted taken:", p_taken)
     print("predicted not taken:", p_not_taken)
