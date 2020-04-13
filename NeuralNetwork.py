@@ -1,8 +1,16 @@
 from sklearn import neural_network
-import sys
+import random
+
 
 _history_length = 62
-_max_batch_size = 512
+_max_batch_size = 512   # max batch size for fitting the model
+
+_hidden_layer_sizes = (8,)
+_activation = "relu"
+_solver = "sgd"
+_alpha = .125
+_learning_rate = "constant"
+_max_iter = 99999
 
 
 class NeuralNetwork:
@@ -11,12 +19,6 @@ class NeuralNetwork:
     """
     def __init__(
             self,
-            hidden_layer_sizes=(8,),
-            activation="relu",
-            solver="sgd",
-            alpha=.1,
-            learning_rate="constant",
-            max_iter=99999,
             history_length=_history_length):
         """
         Instantiates a Neural Network with default value equal to that
@@ -31,16 +33,16 @@ class NeuralNetwork:
         self.batch_size = 1
         self.current_batch_size = 0
         self.classifier = neural_network.MLPClassifier(
-            hidden_layer_sizes=hidden_layer_sizes,
-            activation=activation,
-            solver=solver,
-            alpha=alpha,
-            learning_rate=learning_rate,
+            hidden_layer_sizes=_hidden_layer_sizes,
+            activation=_activation,
+            solver=_solver,
+            alpha=_alpha,
+            learning_rate=_learning_rate,
             shuffle=False,
-            max_iter=max_iter)
+            max_iter=_max_iter)
         # initial fit to define the shape of the NN
-        self.history = [0 for _ in range(self.history_length)]
-        self.classifier.fit([self.history], [0])
+        self.history = [random.randint(0, 1) for _ in range(self.history_length)]
+        self.classifier.fit([self.history], [random.randint(0, 1)])
 
     def predict(self):
         """
@@ -71,36 +73,3 @@ class NeuralNetwork:
             self.batch_X = []
             self.batch_Y = []
             self.batch_size = min(self.batch_size + 1, _max_batch_size)
-
-
-if __name__ == '__main__':
-    nn = NeuralNetwork()
-
-    # Input file path
-    filepath = sys.argv[1]
-    # Number of perceptrons
-    N = int(sys.argv[2])
-
-    f = open(filepath, "r")
-    lines = f.readlines()
-
-    # first fit
-    nn.history = [int(x.split(",")[1]) * 2 - 1 for x in lines[:nn.history_length]]
-    nn.classifier.fit([nn.history], [int(lines[nn.history_length].split(",")[1])*2-1])
-
-    nLines = len(lines)
-    total = 0
-    hits = 0
-    for l in lines[nn.history_length + 1:]:
-        total += 1
-        addr, x = l.split(",")
-        addr, x = int(addr) % N, int(x) * 2 - 1  # translates 0s and 1s to -1s and 1s
-
-        # predict
-        y = nn.predict()
-        if y == x:
-            hits += 1
-
-        # train
-        nn.train(x)
-        print("Accuracy:", hits / total, "...", total, "/", nLines)

@@ -1,7 +1,9 @@
 from Predictor import Predictor
 from Perceptron import Perceptron
 from NeuralNetwork import NeuralNetwork
+from SharedNeuralNetwork import SharedNeuralNetwork
 import sys
+import time
 
 
 """
@@ -17,20 +19,28 @@ if __name__ == '__main__':
     # Input file path
     filepath = sys.argv[1]
     # predictor type; one of {"perceptron", "nn"}
-    pred_type = sys.argv[2]
+    pred_type = sys.argv[2].lower()
     # Number of predictors
     N = int(sys.argv[3])
 
+    pred_class = Perceptron
+    if pred_type == "nn":
+        pred_class = NeuralNetwork
+    elif pred_type == "snn":
+        pred_class = SharedNeuralNetwork
+
     # initialize
-    pred_class = Perceptron if str(pred_type).lower() == "perceptron" else NeuralNetwork
     p = Predictor(pred_class, N)
     p_taken, p_not_taken = 0, 0
     hits = 0
     total = 0
+    start_time = time.time()
+    t = int(time.time())
 
     # read test
     f = open(filepath, "r")
     lines = f.readlines()
+    nlines = len(lines)
 
     # main loop
     for l in lines:
@@ -45,6 +55,10 @@ if __name__ == '__main__':
         if x == y:
             hits += 1
         p.train(addr, x)
+        # Print progress
+        if t != int(time.time()):
+            t = int(time.time())
+            print("accuracy:", hits / total, "...", total, "/", nlines, " done... Elapsed time:", int(t - start_time), "s.")
 
     # print stats
     print("accuracy:", hits / total)
