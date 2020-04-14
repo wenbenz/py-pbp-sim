@@ -2,6 +2,7 @@ from Predictor import Predictor
 from Perceptron import Perceptron
 from NeuralNetwork import NeuralNetwork
 from SharedNeuralNetwork import SharedNeuralNetwork
+from SharedHistoryPerceptron import SharedHistoryPerceptron
 import sys
 import time
 
@@ -28,6 +29,8 @@ if __name__ == '__main__':
         pred_class = NeuralNetwork
     elif pred_type == "snn":
         pred_class = SharedNeuralNetwork
+    elif pred_type == "shp":
+        pred_class = SharedHistoryPerceptron
 
     # initialize
     p = Predictor(pred_class, N)
