@@ -7,8 +7,8 @@ class SharedHistoryPerceptron:
     """
     history = []
 
-    def __init__(self):
-        self.perceptron = Perceptron()
+    def __init__(self, history_length=Perceptron.default_history_length):
+        self.perceptron = Perceptron(history_length=history_length)
         self.perceptron.history = SharedHistoryPerceptron.history
 
     def train(self, x):

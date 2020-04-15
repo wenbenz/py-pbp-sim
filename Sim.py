@@ -23,6 +23,15 @@ if __name__ == '__main__':
     pred_type = sys.argv[2].lower()
     # Number of predictors
     N = int(sys.argv[3])
+    # History length
+    L = int(sys.argv[4])
+    # output (optional)
+    dump = False
+    print(sys.argv)
+    if len(sys.argv) == 6:
+        dump = True
+        dumpfile = sys.argv[5]
+        print("dumping output to", dumpfile)
 
     pred_class = Perceptron
     if pred_type == "nn":
@@ -32,8 +41,10 @@ if __name__ == '__main__':
     elif pred_type == "shp":
         pred_class = SharedHistoryPerceptron
 
+    # print("Predictor:", pred_class)
+
     # initialize
-    p = Predictor(pred_class, N)
+    p = Predictor(pred_class, N, L)
     p_taken, p_not_taken = 0, 0
     hits = 0
     total = 0
@@ -44,6 +55,7 @@ if __name__ == '__main__':
     f = open(filepath, "r")
     lines = f.readlines()
     nlines = len(lines)
+    f.close()
 
     # main loop
     for l in lines:
@@ -61,9 +73,20 @@ if __name__ == '__main__':
         # Print progress
         if t != int(time.time()):
             t = int(time.time())
-            print("accuracy:", hits / total, "...", total, "/", nlines, " done... Elapsed time:", int(t - start_time), "s.")
+            # print("accuracy:", hits / total, "...", total, "/", nlines, " done... Elapsed time:", int(t - start_time), "s.")
 
     # print stats
-    print("accuracy:", hits / total)
-    print("predicted taken:", p_taken)
-    print("predicted not taken:", p_not_taken)
+    output = print
+    if dump:
+        f = open(dumpfile, "a")
+        output = f.write
+
+    output("File:" + str(filepath) + "\n")
+    output("Predictor:" + str(pred_class) + "\n")
+    output("accuracy:" + str(hits / total) + "\n")
+    output("predicted taken:" + str(p_taken) + "\n")
+    output("predicted not taken:" + str(p_not_taken) + "\n")
+
+    # dump files
+    if dump:
+        f.close()

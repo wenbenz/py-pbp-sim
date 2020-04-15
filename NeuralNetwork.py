@@ -2,8 +2,7 @@ from sklearn import neural_network
 import random
 
 
-_history_length = 62
-_max_batch_size = 512   # max batch size for fitting the model
+_max_batch_size = 62   # max batch size for fitting the model
 
 _hidden_layer_sizes = (8,)
 _activation = "relu"
@@ -17,9 +16,12 @@ class NeuralNetwork:
     """
     Neural Network class for branch prediction
     """
+
+    default_history_length = 62
+
     def __init__(
             self,
-            history_length=_history_length):
+            history_length=default_history_length):
         """
         Instantiates a Neural Network with default value equal to that
          of the recommendation for perceptron branch predictor in
